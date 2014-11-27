@@ -13,7 +13,7 @@ import arc_resource.Resource;
  * @param <T> The type of object held in the banks in this bank
  * @since 29.8.2013
  */
-public abstract class BankBank<T extends Handled> extends Bank<Bank<T>> implements StateOperatorListener
+public class BankBank<T extends Handled> extends Bank<Bank<T>> implements StateOperatorListener
 {
 	// ATTRIBUTES	--------------------------
 	

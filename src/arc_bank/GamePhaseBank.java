@@ -26,9 +26,42 @@ public class GamePhaseBank
 	// OTHER METHODS	---------------------------
 	
 	/**
+	 * Initializes the program ready to use the GamePhases introduced in the given file
+	 * @param fileName The name of the file that contains gamePhase data 
+	 * ("data/" automatically included).<br> 
+	 * The file should have the following format:<br>
+	 * &bankName<br>
+	 * GamePhaseName#ResourceType:ResourceBankName1,ResourceBankName2,...#ResourceType2:...#...<br>
+	 * GamePhaseName2#...<br>
+	 * ...
+	 */
+	public static void initializeGamePhaseResources(String fileName)
+	{
+		MultiMediaHolder.initializeResourceDatabase(createGamePhaseBankBank(fileName));
+	}
+	
+	/**
+	 * Creates a new GamePhaseBankBank that can handle all gamephase banks
+	 * @param fileName The name of the file that contains gamePhase data 
+	 * ("data/" automatically included).<br> 
+	 * The file should have the following format:<br>
+	 * &bankName<br>
+	 * GamePhaseName#ResourceType:ResourceBankName1,ResourceBankName2,...#ResourceType2:...#...<br>
+	 * GamePhaseName2#...<br>
+	 * ...
+	 * @return A gamePhaseBankBank A BankBank that contains GamePhaseBanks and their contents
+	 */
+	public static BankBank<GamePhase> createGamePhaseBankBank(String fileName)
+	{
+		return new BankBank<GamePhase>(new BankBankInitializer<>(fileName, 
+				createBankConstructor(), createGamePhaseConstructor()), 
+				MetaResource.GAMEPHASE);
+	}
+	
+	/**
 	 * @return A new bankConstructor that works with GamePhases
 	 */
-	public static GamePhaseBankConstructor createBankConstructor()
+	private static GamePhaseBankConstructor createBankConstructor()
 	{
 		return new GamePhaseBankConstructor();
 	}
@@ -36,7 +69,7 @@ public class GamePhaseBank
 	/**
 	 * @return A new Constructor that creates GamePhases
 	 */
-	public static GamePhaseConstructor createGamePhaseConstructor()
+	private static GamePhaseConstructor createGamePhaseConstructor()
 	{
 		return new GamePhaseConstructor();
 	}
