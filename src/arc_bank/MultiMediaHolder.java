@@ -1,6 +1,7 @@
 package arc_bank;
 
 import java.util.HashMap;
+import java.util.Map;
 import java.util.Set;
 
 import arc_resource.Resource;
@@ -16,16 +17,16 @@ import arc_resource.Resource;
  * 
  * @author Mikko Hilpinen. 
  * @since 14.2.2014
- * @see #initializeResourceDatabase(OpenBankHolder)
+ * @see #initializeResourceDatabase(BankBank)
  */
 public class MultiMediaHolder
 {
 	// ATTRIBUTES	-----------------------------------------------------
 	
-	private static HashMap<Resource, HashMap<String, OpenBank>> activebanks 
-			= new HashMap<Resource, HashMap<String, OpenBank>>();
-	private static HashMap<Resource, OpenBankHolder> bankholders = 
-			new HashMap<Resource, OpenBankHolder>();
+	private static Map<Resource, Map<String, Bank<?>>> activebanks 
+			= new HashMap<Resource, Map<String, Bank<?>>>();
+	private static Map<Resource, BankBank<?>> bankholders = 
+			new HashMap<Resource, BankBank<?>>();
 	
 	
 	// CONSTRUCTOR	-----------------------------------------------------
@@ -44,9 +45,8 @@ public class MultiMediaHolder
 	 * read from a file.
 	 * @param resourceData The OpenBankHolder that will hold the resource data of a certain type
 	 */
-	public static void initializeResourceDatabase(OpenBankHolder resourceData)
+	public static void initializeResourceDatabase(BankBank<?> resourceData)
 	{
-		
 		if (resourceData == null)
 			return;
 		
@@ -54,6 +54,7 @@ public class MultiMediaHolder
 		
 		if (bankholders.containsKey(type))
 		{
+			// TODO: Throw exception instead
 			System.err.println("The resource database with type " + type + 
 					" has already been initialized");
 			return;
@@ -63,12 +64,11 @@ public class MultiMediaHolder
 		bankholders.put(type, resourceData);
 		
 		// Initializes the map
-		activebanks.put(type, new HashMap<String, OpenBank>());
+		activebanks.put(type, new HashMap<String, Bank<?>>());
 	}
 	
 	/**
-	 * Activates the bank with the given resourceType and name. The bank 
-	 * can be then found by calling the getBank() -methods. The bank remains 
+	 * Activates the bank with the given resourceType and name. The bank remains 
 	 * active until deactivateBank() is called for it
 	 * 
 	 * @param type The resource type of the bank
@@ -77,11 +77,11 @@ public class MultiMediaHolder
 	 * right away (true) or at the first time the bank is used (false)
 	 * @see #deactivateBank(Resource, String)
 	 */
-	public static void activateBank(Resource type, String bankname, 
-			boolean preinitialize)
+	public static void activateBank(Resource type, String bankname, boolean preinitialize)
 	{
 		if (!activebanks.containsKey(type))
 		{
+			// TODO: Throw exception
 			System.err.println(type + 
 					" database hasn't been initialized and can't be used yet");
 			return;
@@ -91,13 +91,14 @@ public class MultiMediaHolder
 		if (activebanks.get(type).containsKey(bankname))
 			return;
 		
-		OpenBank newbank = bankholders.get(type).getBank(bankname);
-		if (preinitialize)
-			newbank.initializeBank();
-		activebanks.get(type).put(bankname, newbank);
+		Bank<?> newbank = bankholders.get(type).get(bankname);
 		
 		if (newbank == null)
 			return;
+		
+		if (preinitialize)
+			newbank.initialize();
+		activebanks.get(type).put(bankname, newbank);
 	}
 	
 	/**
@@ -130,16 +131,18 @@ public class MultiMediaHolder
 	 * @return A bank in the multiMediaHolder with the given type and name or null if no such 
 	 * bank exists
 	 */
-	public static OpenBank getBank(Resource type, String bankname)
+	public static Bank<?> getBank(Resource type, String bankname)
 	{
 		if (!activebanks.containsKey(type))
 		{
+			// TODO: Exception...
 			System.err.println(type + " database has not been initialized yet!");
 			return null;
 		}
 		
 		if (!activebanks.get(type).containsKey(bankname))
 		{
+			// TODO: Exception
 			System.err.println(type + "bank named " + bankname + 
 					" is not active!");
 			return null;

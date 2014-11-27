@@ -1,24 +1,30 @@
 package arc_bank;
 
+import genesis_event.Handled;
+import genesis_util.StateOperator;
+
 import java.util.HashMap;
+import java.util.Map;
 import java.util.Set;
 
 
 /**
  * Abstractbank is the superclass of all the bank objects providing some 
- * necessary methods for the subclasses. The class also handles neccessary 
+ * necessary methods for the subclasses. The class also handles necessary 
  * data handling.
  *
  * @author Mikko Hilpinen.
- *         Created 17.8.2013.
- * @see BankObject
+ * @param <T> The type of object held in this bank
+ * @since 17.8.2013.
  */
-public abstract class AbstractBank
+public class Bank<T extends Handled> implements Handled
 {
 	// ATTRIBUTES	-----------------------------------------------------
 	
-	private HashMap<String, BankObject> bank;
+	private Map<String, T> bank;
 	private boolean initialized;
+	private BankInitializer<T> initializer;
+	private StateOperator isDeadOperator;
 	
 	
 	// CONSTRUCTOR	-----------------------------------------------------
@@ -26,49 +32,37 @@ public abstract class AbstractBank
 	/**
 	 * Creates a new uninitialized abstractbank. The bank will be initialized 
 	 * when an object tries to get something from it.
+	 * @param initializer The initializer that will initialize the bank's contents when 
+	 * necessary
 	 */
-	public AbstractBank()
+	public Bank(BankInitializer<T> initializer)
 	{
 		// Initializes attributes
-		this.bank = new HashMap<String, BankObject>();
+		this.bank = new HashMap<>();
 		this.initialized = false;
+		this.initializer = initializer;
+		this.isDeadOperator = new StateOperator(false, true);
+	}
+	
+	/**
+	 * Creates a new empty bank. The contents must be inserted manually
+	 */
+	public Bank()
+	{
+		// Initializes attributes
+		this.bank = new HashMap<>();
+		this.initialized = false;
+		this.initializer = null;
+		this.isDeadOperator = new StateOperator(false, true);
 	}
 	
 	
-	// ABSTRACT METHODS	-------------------------------------------------
-	
-	/**
-	 * @return The class the bank supports. In other words, what kind of instances 
-	 * does the bank hold
-	 */
-	protected abstract Class<?> getSupportedClass();
-	
-	/**
-	 * A method that adds the needed objects into the bank using the addObject 
-	 * method or another similar method.
-	 * 
-	 * @see #addObject(BankObject, String)
-	 */
-	protected abstract void initialize();
-	
-	
-	// IMPLEMENTED METHODS	---------------------------------------------
+	// IMPLEMENTED METHODS	-------------------------
 	
 	@Override
-	public String toString()
+	public StateOperator getIsDeadStateOperator()
 	{
-		String status = "uninitialized ";
-		String includes = "";
-		// If the bank has been initialized, prints the content of the bank
-		if (this.initialized)
-		{
-			status = "initialized ";
-			includes = "including:";
-			for (String name: this.bank.keySet())
-				includes += " " + name;
-		}
-		
-		return status + getClass().getName() + includes;
+		return this.isDeadOperator;
 	}
 	
 	
@@ -90,27 +84,37 @@ public abstract class AbstractBank
 	 * Tries to retrieve an object from the bank. Calling this method initializes 
 	 * the bank if it hasn't yet been initialized
 	 *
-	 * @param objectname The name of the object in the bank
+	 * @param objectName The name of the object in the bank
 	 * @return The object in the bank or null if no object with the given name 
 	 * was found
 	 */
-	protected BankObject getObject(String objectname)
+	public T get(String objectName)
 	{
 		// Initializes the bank if it hasn't already
-		initializeBank();
+		initialize();
 		
 		// Checks the parameter
-		if (objectname == null)
+		if (objectName == null)
 			return null;
 		
 		// Tries to get the object from the map and return it
-		if (this.bank.containsKey(objectname))
-			return this.bank.get(objectname);
+		if (this.bank.containsKey(objectName))
+		{
+			// Only returns alive objects, others are removed from the bank
+			T object = this.bank.get(objectName);
+			
+			if (object.getIsDeadStateOperator().getState())
+			{
+				this.bank.remove(objectName);
+				return null;
+			}
+			else
+				return object;
+		}
 		else
 		{
-			System.out.println("The bank holds " + this.bank.size() + " objects");
 			System.err.println("The bank " + getClass().getName() + 
-					" doesn't hold object named " + objectname);
+					" doesn't hold object named " + objectName);
 			return null;
 		}
 	}
@@ -118,21 +122,17 @@ public abstract class AbstractBank
 	/**
 	 * Adds a new object to the bank
 	 *
-	 * @param o The object to be added (must have the supported class)
+	 * @param object The object to be added
 	 * @param name The name of the object in the bank
-	 * @see #getSupportedClass()
 	 */
-	protected void addObject(BankObject o, String name)
+	public void put(String name, T object)
 	{
-		// Checks the given name
-		if (name == null)
-			return;
-		// Checks whether the object's class is supported
-		if (!getSupportedClass().isInstance(o))
+		// Checks the given name and object state
+		if (name == null || !object.getIsDeadStateOperator().getState())
 			return;
 		
 		// Adds the object to the bank
-		this.bank.put(name, o);
+		this.bank.put(name, object);
 	}
 	
 	/**
@@ -150,8 +150,10 @@ public abstract class AbstractBank
 			return;
 		
 		// Goes through all the objects in the bank and kills them
-		for (String name: this.bank.keySet())
-			this.bank.get(name).kill();
+		for (T object: this.bank.values())
+		{
+			object.getIsDeadStateOperator().setState(true);
+		}
 		
 		// Clears the bank
 		this.bank.clear();
@@ -161,12 +163,13 @@ public abstract class AbstractBank
 	/**
 	 * Initializes the bank so it can be used immediately
 	 */
-	public void initializeBank()
+	public void initialize()
 	{
 		// If the bank hasn't yet been initialized, initializes it
 		if (!this.initialized)
 		{
-			initialize();
+			if (this.initializer != null)
+				this.initializer.initialize(this);
 			this.initialized = true;
 		}
 	}

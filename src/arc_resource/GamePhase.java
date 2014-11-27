@@ -1,8 +1,11 @@
 package arc_resource;
 
-import java.util.HashMap;
+import genesis_event.Handled;
+import genesis_util.StateOperator;
 
-import arc_bank.BankObject;
+import java.util.HashMap;
+import java.util.Map;
+
 import arc_bank.MultiMediaHolder;
 
 /**
@@ -13,13 +16,13 @@ import arc_bank.MultiMediaHolder;
  * @author Mikko Hilpinen
  * @since 8.3.2014
  */
-public class GamePhase implements BankObject
+public class GamePhase implements Handled
 {
 	// ATTRIBUTES	------------------------------------------------------
 	
 	private String name;
-	private HashMap<Resource, String[]> connectedBankNames;
-	private boolean dead;
+	private Map<Resource, String[]> connectedBankNames;
+	private StateOperator isDeadOperator;
 	
 	
 	// CONSTRUCTOR	------------------------------------------------------
@@ -33,9 +36,9 @@ public class GamePhase implements BankObject
 	public GamePhase(String name)
 	{
 		// Initializes attributes
-		this.dead = false;
+		this.isDeadOperator = new StateOperator(false, true);
 		this.name = name;
-		this.connectedBankNames = new HashMap<Resource, String[]>();
+		this.connectedBankNames = new HashMap<>();
 	}
 	
 	
@@ -48,15 +51,9 @@ public class GamePhase implements BankObject
 	}
 	
 	@Override
-	public void kill()
+	public StateOperator getIsDeadStateOperator()
 	{
-		this.dead = true;
-	}
-
-	@Override
-	public boolean isDead()
-	{
-		return this.dead;
+		return this.isDeadOperator;
 	}
 	
 	
@@ -76,13 +73,7 @@ public class GamePhase implements BankObject
 		String[] names = this.connectedBankNames.get(type);
 		
 		if (names == null)
-		{
-			/*
-			System.err.println("ResourceType " + type + "in GamePhase " + this 
-					+ " hasn't been introduced.");
-			*/
 			return new String[0];
-		}
 		
 		// Clones the table just in case the caller would try to edit the 
 		// contents
