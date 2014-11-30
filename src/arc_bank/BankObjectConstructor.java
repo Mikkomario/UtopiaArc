@@ -11,7 +11,6 @@ import genesis_event.Handled;
  */
 public abstract interface BankObjectConstructor<T extends Handled>
 {
-	// TODO: Add exception
 	/**
 	 * Constructs an object from the information of the given line. The object should be 
 	 * put to the given bank as well.

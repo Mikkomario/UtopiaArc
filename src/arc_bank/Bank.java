@@ -112,11 +112,8 @@ public class Bank<T extends Handled> implements Handled
 				return object;
 		}
 		else
-		{
-			System.err.println("The bank " + getClass().getName() + 
-					" doesn't hold object named " + objectName);
-			return null;
-		}
+			throw new ResourceUnavailableException(getClass().getName() + 
+					" doesn't hold an object named " + objectName);
 	}
 	
 	/**

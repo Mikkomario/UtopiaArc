@@ -4,8 +4,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 import arc_resource.GamePhase;
-import arc_resource.MetaResource;
-import arc_resource.Resource;
+import arc_resource.MetaResourceType;
+import arc_resource.ResourceType;
 
 /**
  * This is a static factor for banks that are contain GamePhases
@@ -15,6 +15,11 @@ import arc_resource.Resource;
  */
 public class GamePhaseBank
 {
+	// ATTRIBUTES	------------------------------
+	
+	private static String defaultPhaseBankName;
+	
+	
 	// CONSTRUCTOR	------------------------------
 	
 	private GamePhaseBank()
@@ -34,10 +39,13 @@ public class GamePhaseBank
 	 * GamePhaseName#ResourceType:ResourceBankName1,ResourceBankName2,...#ResourceType2:...#...<br>
 	 * GamePhaseName2#...<br>
 	 * ...
+	 * @param bankName The name of the GamePhaseBank that will be activated initially
 	 */
-	public static void initializeGamePhaseResources(String fileName)
+	public static void initializeGamePhaseResources(String fileName, String bankName)
 	{
 		MultiMediaHolder.initializeResourceDatabase(createGamePhaseBankBank(fileName));
+		MultiMediaHolder.activateBank(MetaResourceType.GAMEPHASE, bankName, false);
+		defaultPhaseBankName = bankName;
 	}
 	
 	/**
@@ -55,7 +63,7 @@ public class GamePhaseBank
 	{
 		return new BankBank<GamePhase>(new BankBankInitializer<>(fileName, 
 				createBankConstructor(), createGamePhaseConstructor()), 
-				MetaResource.GAMEPHASE);
+				MetaResourceType.GAMEPHASE);
 	}
 	
 	/**
@@ -84,9 +92,34 @@ public class GamePhaseBank
 	@SuppressWarnings("unchecked")
 	public static Bank<GamePhase> getGamePhaseBank(String bankName)
 	{
-		Bank<?> bank = MultiMediaHolder.getBank(MetaResource.GAMEPHASE, bankName);
+		Bank<?> bank = MultiMediaHolder.getBank(MetaResourceType.GAMEPHASE, bankName);
 		
 		return (Bank<GamePhase>) bank;
+	}
+	
+	/**
+	 * Retrieves a gamePhase from the a gamePhaseBank
+	 * @param bankName The name of the bank the phase is retrieved from
+	 * @param gamePhaseName The name of the GamePhase in the bank
+	 * @return A gamePhase from the bank
+	 */
+	public static GamePhase getGamePhase(String bankName, String gamePhaseName)
+	{
+		return getGamePhaseBank(bankName).get(gamePhaseName);
+	}
+	
+	/**
+	 * Retrieves a GamePhase from the default gamePhaseBank introduced upon resource initiation.
+	 * @param gamePhaseName The name of the GamePhase in the default bank.
+	 * @return A gamePhase with the given name.
+	 */
+	public static GamePhase getGamePhase(String gamePhaseName)
+	{
+		if (defaultPhaseBankName == null)
+			throw new ResourceUnavailableException(
+					"The name of the default GamePhaseBank hasn't been introduced.");
+		
+		return getGamePhase(defaultPhaseBankName, gamePhaseName);
 	}
 
 	
@@ -122,19 +155,14 @@ public class GamePhaseBank
 		@Override
 		public void construct(String line, Bank<GamePhase> bank)
 		{
-			// TODO: Add exceptions
-			
 			String[] arguments = line.split("#");
 			
 			// Checks that there are enough arguments
 			if (arguments.length < 1)
-			{
-				System.err.println("Couldn't load a GamePhase. Line " + line + 
-						"doensn't have enough arguments");
-				return;
-			}
+				throw new ResourceInitializationException("Couldn't load a GamePhase. Line " + 
+						line + "doensn't have enough arguments");
 			
-			Map<Resource, String[]> banknames = new HashMap<>();
+			Map<ResourceType, String[]> banknames = new HashMap<>();
 					
 			// The first argument is the name of the phase
 			// Reads the banknames and resourcetypes from arguments 2 forwards
@@ -152,7 +180,7 @@ public class GamePhaseBank
 			// to the findings
 			GamePhase newPhase = new GamePhase(arguments[0]);
 			
-			for (Resource type : banknames.keySet())
+			for (ResourceType type : banknames.keySet())
 			{
 				newPhase.connectResourceBankNames(type,  banknames.get(type));
 			}

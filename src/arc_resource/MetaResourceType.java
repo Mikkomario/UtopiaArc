@@ -6,7 +6,7 @@ package arc_resource;
  * @author Mikko Hilpinen
  * @since 27.7.2014
  */
-public enum MetaResource implements Resource
+public enum MetaResourceType implements ResourceType
 {
 	/**
 	 * GamePhase represents a state in the program's flow. GamePhases contain a certain set 

@@ -60,8 +60,7 @@ public class BankBankInitializer<T extends Handled> implements BankInitializer<B
 		}
 		catch (FileNotFoundException e)
 		{
-			// TODO Handle exceptions
-			e.printStackTrace();
+			throw new ResourceInitializationException("Cannot find file " + this.fileName);
 		}
 	}
 	
@@ -95,7 +94,10 @@ public class BankBankInitializer<T extends Handled> implements BankInitializer<B
 		@Override
 		protected void onLine(String line, List<String> modes)
 		{
-			// TODO: Handle exception if mode not introduced
+			if (modes.isEmpty())
+				throw new ResourceInitializationException(
+						"Bank name was not introduced before line." + line);
+			
 			// Creates a new object to be put into the bank
 			this.constructor.construct(line, this.bank.get(modes.get(0)));
 		}

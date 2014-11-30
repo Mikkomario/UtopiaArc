@@ -4,7 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
-import arc_resource.Resource;
+import arc_resource.ResourceType;
 
 /**
  * Multimediaholder keeps track all kinds of resources 
@@ -23,10 +23,10 @@ public class MultiMediaHolder
 {
 	// ATTRIBUTES	-----------------------------------------------------
 	
-	private static Map<Resource, Map<String, Bank<?>>> activebanks 
-			= new HashMap<Resource, Map<String, Bank<?>>>();
-	private static Map<Resource, BankBank<?>> bankholders = 
-			new HashMap<Resource, BankBank<?>>();
+	private static Map<ResourceType, Map<String, Bank<?>>> activebanks 
+			= new HashMap<ResourceType, Map<String, Bank<?>>>();
+	private static Map<ResourceType, BankBank<?>> bankholders = 
+			new HashMap<ResourceType, BankBank<?>>();
 	
 	
 	// CONSTRUCTOR	-----------------------------------------------------
@@ -50,15 +50,11 @@ public class MultiMediaHolder
 		if (resourceData == null)
 			return;
 		
-		Resource type = resourceData.getHeldResourceType();
+		ResourceType type = resourceData.getHeldResourceType();
 		
 		if (bankholders.containsKey(type))
-		{
-			// TODO: Throw exception instead
-			System.err.println("The resource database with type " + type + 
+			throw new ResourceStateException("ResourceType " + type + 
 					" has already been initialized");
-			return;
-		}
 		
 		// Remembers the new holder
 		bankholders.put(type, resourceData);
@@ -75,17 +71,13 @@ public class MultiMediaHolder
 	 * @param bankname The name of the resource bank
 	 * @param preinitialize Should all the resources in the bank be initialized 
 	 * right away (true) or at the first time the bank is used (false)
-	 * @see #deactivateBank(Resource, String)
+	 * @see #deactivateBank(ResourceType, String)
 	 */
-	public static void activateBank(Resource type, String bankname, boolean preinitialize)
+	public static void activateBank(ResourceType type, String bankname, boolean preinitialize)
 	{
 		if (!activebanks.containsKey(type))
-		{
-			// TODO: Throw exception
-			System.err.println(type + 
-					" database hasn't been initialized and can't be used yet");
-			return;
-		}
+			throw new ResourceUnavailableException(
+					"The resource type " + type + " hasn't been initialized yet");
 		
 		// If the bank was already activated, does nothing
 		if (activebanks.get(type).containsKey(bankname))
@@ -107,9 +99,9 @@ public class MultiMediaHolder
 	 * 
 	 * @param type The resource type of the bank
 	 * @param bankname The name of the bank
-	 * @see #activateBank(Resource, String, boolean)
+	 * @see #activateBank(ResourceType, String, boolean)
 	 */
-	public static void deactivateBank(Resource type, String bankname)
+	public static void deactivateBank(ResourceType type, String bankname)
 	{
 		// If the bank isn't active or if the resource type hasn't been 
 		// initialized, does nothing
@@ -131,22 +123,14 @@ public class MultiMediaHolder
 	 * @return A bank in the multiMediaHolder with the given type and name or null if no such 
 	 * bank exists
 	 */
-	public static Bank<?> getBank(Resource type, String bankname)
+	public static Bank<?> getBank(ResourceType type, String bankname)
 	{
 		if (!activebanks.containsKey(type))
-		{
-			// TODO: Exception...
-			System.err.println(type + " database has not been initialized yet!");
-			return null;
-		}
+			throw new ResourceUnavailableException(
+					"The resource type " + type + " hasn't been initialized yet");
 		
 		if (!activebanks.get(type).containsKey(bankname))
-		{
-			// TODO: Exception
-			System.err.println(type + "bank named " + bankname + 
-					" is not active!");
-			return null;
-		}
+			throw new ResourceUnavailableException("The bank " + bankname + " insn't active");
 		
 		return activebanks.get(type).get(bankname);
 	}
@@ -154,7 +138,7 @@ public class MultiMediaHolder
 	/**
 	 * @return The types of resources initialized to this holder
 	 */
-	public static Set<Resource> getHeldResourceTypes()
+	public static Set<ResourceType> getHeldResourceTypes()
 	{
 		return bankholders.keySet();
 	}
@@ -166,9 +150,9 @@ public class MultiMediaHolder
 	 * @param resourceName The name of the resource type
 	 * @return A resource with the given name
 	 */
-	public static Resource getResourceType(String resourceName)
+	public static ResourceType getResourceType(String resourceName)
 	{
-		for (Resource resource : getHeldResourceTypes())
+		for (ResourceType resource : getHeldResourceTypes())
 		{
 			if (resource.toString().equalsIgnoreCase(resourceName))
 				return resource;

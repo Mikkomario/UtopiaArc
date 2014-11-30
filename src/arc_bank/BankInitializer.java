@@ -12,7 +12,6 @@ import genesis_event.Handled;
  */
 public interface BankInitializer<T extends Handled>
 {
-	// TODO: Add exceptions
 	/**
 	 * Initializes the given bank
 	 * @param bank The bank that requires initializing

@@ -21,7 +21,7 @@ public class GamePhase implements Handled
 	// ATTRIBUTES	------------------------------------------------------
 	
 	private String name;
-	private Map<Resource, String[]> connectedBankNames;
+	private Map<ResourceType, String[]> connectedBankNames;
 	private StateOperator isDeadOperator;
 	
 	
@@ -68,7 +68,7 @@ public class GamePhase implements Handled
 	 * given type used during this phase. If the resourceType hasn't been 
 	 * introduced to the phase, a table with a size of 0 is returned.
 	 */
-	public String[] getConnectedResourceBankNames(Resource type)
+	public String[] getConnectedResourceBankNames(ResourceType type)
 	{
 		String[] names = this.connectedBankNames.get(type);
 		
@@ -103,9 +103,9 @@ public class GamePhase implements Handled
 	 * @warning It may not be a good idea to connect GamePhaseBanks to 
 	 * GamePhases. You have been warned.
 	 */
-	public void connectResourceBankNames(Resource bankType, String[] bankNames)
+	public void connectResourceBankNames(ResourceType bankType, String[] bankNames)
 	{
-		if (bankType == MetaResource.GAMEPHASE)
+		if (bankType == MetaResourceType.GAMEPHASE)
 			System.err.println("Warning: Connecting a GamePhaseBank to a "
 					+ "GamePhase is usually not a good idea.");
 		

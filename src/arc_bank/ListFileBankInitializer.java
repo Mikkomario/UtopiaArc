@@ -57,9 +57,7 @@ public class ListFileBankInitializer<T extends Handled> implements BankInitializ
 		}
 		catch (FileNotFoundException e)
 		{
-			// TODO: Throw exception
-			System.err.println("No file available");
-			e.printStackTrace();
+			throw new ResourceInitializationException("Couldn't find file " + this.fileName);
 		}
 	}
 }

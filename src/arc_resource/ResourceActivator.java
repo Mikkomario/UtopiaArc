@@ -39,7 +39,7 @@ public class ResourceActivator
 	public static void startPhase(GamePhase phase)
 	{
 		// Updates the loaded resources
-		for (Resource type : MultiMediaHolder.getHeldResourceTypes())
+		for (ResourceType type : MultiMediaHolder.getHeldResourceTypes())
 		{
 			updateResourceBanks(phase, type);
 		}
@@ -49,7 +49,7 @@ public class ResourceActivator
 	}
 	
 	private static void updateResourceBanks(GamePhase newphase, 
-			Resource resourcetype)
+			ResourceType resourcetype)
 	{
 		String[] newbanknames = 
 				newphase.getConnectedResourceBankNames(resourcetype);

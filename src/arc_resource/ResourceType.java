@@ -8,10 +8,7 @@ package arc_resource;
  * @author Mikko Hilpinen
  * @since 22.7.2014
  */
-public interface Resource
+public interface ResourceType
 {
-	// TODO: Change to ResourceType
 	// Resource is used as a wrapper and doesn't limit classes that inherit it
-	
-	// TODO: How about constructing resourceBanks through the resource enumeration?
 }
