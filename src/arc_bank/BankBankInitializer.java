@@ -44,6 +44,7 @@ public class BankBankInitializer<T extends Handled> implements BankInitializer<B
 	{
 		this.fileName = fileName;
 		this.constructor = constructor;
+		this.bankConstructor = bankConstructor;
 	}
 	
 	

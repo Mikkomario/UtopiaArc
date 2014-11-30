@@ -117,6 +117,14 @@ public class Bank<T extends Handled> implements Handled
 	}
 	
 	/**
+	 * @return How many objects are currently stored in the bank
+	 */
+	public int size()
+	{
+		return this.bank.size();
+	}
+	
+	/**
 	 * Adds a new object to the bank
 	 *
 	 * @param object The object to be added
@@ -125,7 +133,7 @@ public class Bank<T extends Handled> implements Handled
 	public void put(String name, T object)
 	{
 		// Checks the given name and object state
-		if (name == null || !object.getIsDeadStateOperator().getState())
+		if (name == null || object.getIsDeadStateOperator().getState())
 			return;
 		
 		// Adds the object to the bank
@@ -165,9 +173,9 @@ public class Bank<T extends Handled> implements Handled
 		// If the bank hasn't yet been initialized, initializes it
 		if (!this.initialized)
 		{
+			this.initialized = true;
 			if (this.initializer != null)
 				this.initializer.initialize(this);
-			this.initialized = true;
 		}
 	}
 	

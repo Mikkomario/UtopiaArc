@@ -31,6 +31,8 @@ public class BankBank<T extends Handled> extends Bank<Bank<T>> implements StateO
 	{
 		super(initializer);
 		
+		this.resourceType = resourceType;
+		
 		getIsDeadStateOperator().getListenerHandler().add(this);
 	}
 	

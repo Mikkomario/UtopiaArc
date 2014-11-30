@@ -1,0 +1,4 @@
+&test
+phase1#TestResource:bank1,bank2
+phase2#TestResource:bank2,bank3
+phase3#TestResource:bank3

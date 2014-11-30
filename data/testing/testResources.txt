@@ -1,0 +1,17 @@
+&bank1
+one#Olento 1
+two#Creature 2
+three#Being 3
+four#Object 4
+
+&bank2
+one#rakastaa...
+two#ei rakasta...
+three#rakastaa...
+four#ei rakasta...
+
+&bank3
+one#test
+two#test2
+three#test3
+four#test4
