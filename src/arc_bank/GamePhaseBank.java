@@ -31,7 +31,8 @@ public class GamePhaseBank
 	// OTHER METHODS	---------------------------
 	
 	/**
-	 * Initializes the program ready to use the GamePhases introduced in the given file
+	 * Initializes the program ready to use the GamePhases introduced in the given file. This 
+	 * should be called after the other resource types have been initialized.
 	 * @param fileName The name of the file that contains gamePhase data 
 	 * ("data/" automatically included).<br> 
 	 * The file should have the following format:<br>
@@ -43,9 +44,24 @@ public class GamePhaseBank
 	 */
 	public static void initializeGamePhaseResources(String fileName, String bankName)
 	{
-		MultiMediaHolder.initializeResourceDatabase(createGamePhaseBankBank(fileName));
+		initializeGamePhaseResources(fileName);
 		MultiMediaHolder.activateBank(MetaResourceType.GAMEPHASE, bankName, false);
 		defaultPhaseBankName = bankName;
+	}
+	
+	/**
+	 * Initializes the program ready to use the GamePhases introduced in the given file.
+	 * @param fileName The name of the file that contains gamePhase data 
+	 * ("data/" automatically included).<br> 
+	 * The file should have the following format:<br>
+	 * &bankName<br>
+	 * GamePhaseName#ResourceType:ResourceBankName1,ResourceBankName2,...#ResourceType2:...#...<br>
+	 * GamePhaseName2#...<br>
+	 * ...
+	 */
+	public static void initializeGamePhaseResources(String fileName)
+	{
+		MultiMediaHolder.initializeResourceDatabase(createGamePhaseBankBank(fileName));
 	}
 	
 	/**

@@ -160,4 +160,16 @@ public class MultiMediaHolder
 		
 		return null;
 	}
+	
+	/**
+	 * Finds out the possible bank names of a single resource type
+	 * @param type A resource type initialized in this holder
+	 * @return All the bank names that can be activated / deactivated in that given type.
+	 */
+	public static Set<String> getBankNames(ResourceType type)
+	{
+		if (!bankholders.containsKey(type))
+			return null;
+		return bankholders.get(type).getContentNames();
+	}
 }
