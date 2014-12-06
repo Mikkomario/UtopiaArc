@@ -161,6 +161,7 @@ public class MultiMediaHolder
 		return null;
 	}
 	
+	// TODO: Rename
 	/**
 	 * Finds out the possible bank names of a single resource type
 	 * @param type A resource type initialized in this holder

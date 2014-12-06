@@ -32,18 +32,24 @@ public class ArcResourceTest
 		GamePhaseBank.initializeGamePhaseResources("testing/testGamePhases.txt", "test");
 		
 		// Activates a phase
-		ResourceActivator.startPhase(GamePhaseBank.getGamePhase("phase1"));
+		ResourceActivator.startPhase(GamePhaseBank.getGamePhase("phase1"), false);
 		
 		printBankContents("bank1");
 		printBankContents("bank2");
 		
-		ResourceActivator.startPhase(GamePhaseBank.getGamePhase("phase2"));
+		ResourceActivator.startPhase(GamePhaseBank.getGamePhase("phase2"), true);
 		
 		printBankContents("bank2");
 		printBankContents("bank3");
 		
-		ResourceActivator.startPhase(GamePhaseBank.getGamePhase("phase3"));
+		ResourceActivator.startPhase(GamePhaseBank.getGamePhase("phase3"), true);
 		
+		printBankContents("bank3");
+		
+		ResourceActivator.startPhase(GamePhaseBank.getGamePhase("phase1"), false);
+		
+		printBankContents("bank1");
+		printBankContents("bank2");
 		printBankContents("bank3");
 	}
 	
@@ -55,6 +61,7 @@ public class ArcResourceTest
 		System.out.println(bankName + " --------------------------------");
 		
 		Bank<TestResource> bank = TestResourceBank.getTestResourceBank(bankName);
+		System.out.println("Bank size: " + bank.size());
 		for (String name : bank.getContentNames())
 		{
 			System.out.println(name + ": " + bank.get(name));

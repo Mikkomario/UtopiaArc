@@ -53,8 +53,9 @@ public class BankBankInitializer<T extends Handled> implements BankInitializer<B
 	@Override
 	public void initialize(Bank<Bank<T>> bank)
 	{
-		BankFileReader<T> reader = new BankFileReader<>(bank, this.bankConstructor, 
-				this.constructor);
+		// Initializes the bankBank and provides initializers for the created banks
+		BankFileReader<T> reader = new BankFileReader<>(this.fileName, bank, 
+				this.bankConstructor, this.constructor);
 		try
 		{
 			reader.readFile(this.fileName, "*");
@@ -75,11 +76,12 @@ public class BankBankInitializer<T extends Handled> implements BankInitializer<B
 		private Bank<Bank<T2>> bank;
 		private BankObjectConstructor<T2> constructor;
 		private BankObjectConstructor<Bank<T2>> bankConstructor;
+		private String fileName;
 		
 		
 		// CONSTRUCTOR	----------------------------------
 		
-		public BankFileReader(Bank<Bank<T2>> bank, BankObjectConstructor<Bank<T2>> 
+		public BankFileReader(String fileName, Bank<Bank<T2>> bank, BankObjectConstructor<Bank<T2>> 
 				bankConstructor, BankObjectConstructor<T2> constructor)
 		{
 			super("&");
@@ -87,6 +89,7 @@ public class BankBankInitializer<T extends Handled> implements BankInitializer<B
 			this.bank = bank;
 			this.constructor = constructor;
 			this.bankConstructor = bankConstructor;
+			this.fileName = fileName;
 		}
 		
 		
@@ -95,19 +98,17 @@ public class BankBankInitializer<T extends Handled> implements BankInitializer<B
 		@Override
 		protected void onLine(String line, List<String> modes)
 		{
-			if (modes.isEmpty())
-				throw new ResourceInitializationException(
-						"Bank name was not introduced before line." + line);
-			
-			// Creates a new object to be put into the bank
-			this.constructor.construct(line, this.bank.get(modes.get(0)));
+			// Doesn't initialize the bank content but leaves it to the created initializers 
+			// (see onMode(String, List<String>)
 		}
 
 		@Override
 		protected void onMode(String newMode, List<String> modes)
 		{
-			// Creates a new bank
-			this.bankConstructor.construct(newMode, this.bank);
+			// Creates a new bank and an initializer for it
+			Bank<T2> newBank = this.bankConstructor.construct(newMode, this.bank);
+			newBank.setInitializer(new FileSegmentBankInitializer<>(this.fileName, newMode, 
+					this.constructor));
 		}
 	}
 }

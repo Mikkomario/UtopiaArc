@@ -45,7 +45,8 @@ public class Bank<T extends Handled> implements Handled
 	}
 	
 	/**
-	 * Creates a new empty bank. The contents must be inserted manually
+	 * Creates a new empty bank. The contents must be inserted manually or a new initializer 
+	 * must be provided separately.
 	 */
 	public Bank()
 	{
@@ -74,7 +75,19 @@ public class Bank<T extends Handled> implements Handled
 	 */
 	public Set<String> getContentNames()
 	{
+		// If the bank isn't active yet, activates it
+		initialize();
+		
 		return this.bank.keySet();
+	}
+	
+	/**
+	 * Changes the initializer the bank uses to initialize its contents
+	 * @param initializer The initializer that will initialize the contents
+	 */
+	public void setInitializer(BankInitializer<T> initializer)
+	{
+		this.initializer = initializer;
 	}
 	
 	
@@ -121,6 +134,9 @@ public class Bank<T extends Handled> implements Handled
 	 */
 	public int size()
 	{
+		// Initializes the bank if it hasn't already
+		initialize();
+		
 		return this.bank.size();
 	}
 	

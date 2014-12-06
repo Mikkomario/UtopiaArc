@@ -17,6 +17,7 @@ public abstract interface BankObjectConstructor<T extends Handled>
 	 * @param line The line that should contain all the necessary information for constructing 
 	 * the object
 	 * @param bank The bank the constructed object should be put to
+	 * @return The constructed object (for reference)
 	 */
-	public void construct(String line, Bank<T> bank);
+	public T construct(String line, Bank<T> bank);
 }

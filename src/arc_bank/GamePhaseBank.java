@@ -152,9 +152,11 @@ public class GamePhaseBank
 		// IMPLEMENTED METHODS	-----------------------------------
 		
 		@Override
-		public void construct(String line, Bank<Bank<GamePhase>> bank)
+		public Bank<GamePhase> construct(String line, Bank<Bank<GamePhase>> bank)
 		{
-			bank.put(line, new Bank<GamePhase>());
+			Bank<GamePhase> newBank = new Bank<>();
+			bank.put(line, newBank);
+			return newBank;
 		}
 	}
 	
@@ -169,7 +171,7 @@ public class GamePhaseBank
 		// IMPLEMENTED METHODS	---------------
 
 		@Override
-		public void construct(String line, Bank<GamePhase> bank)
+		public GamePhase construct(String line, Bank<GamePhase> bank)
 		{
 			String[] arguments = line.split("#");
 			
@@ -202,6 +204,8 @@ public class GamePhaseBank
 			}
 			
 			bank.put(arguments[0], newPhase);
+			
+			return newPhase;
 		}
 	}
 }

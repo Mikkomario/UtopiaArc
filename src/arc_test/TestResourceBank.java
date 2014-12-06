@@ -57,19 +57,24 @@ public class TestResourceBank
 		// IMPLEMENTED METHODS	-------------------------------------
 		
 		@Override
-		public void construct(String line, Bank<TestResource> bank)
+		public TestResource construct(String line, Bank<TestResource> bank)
 		{
+			System.out.println("Constructs a testResource from " + line);
 			String[] arguments = line.split("#");
-			bank.put(arguments[0], new TestResource(arguments[1]));
+			TestResource newResource = new TestResource(arguments[1]);
+			bank.put(arguments[0], newResource);
+			return newResource;
 		}
 	}
 	
 	private static class TestResourceBankConstructor implements BankObjectConstructor<Bank<TestResource>>
 	{
 		@Override
-		public void construct(String line, Bank<Bank<TestResource>> bank)
+		public Bank<TestResource> construct(String line, Bank<Bank<TestResource>> bank)
 		{
-			bank.put(line, new Bank<TestResource>());
+			Bank<TestResource> newBank = new Bank<>();
+			bank.put(line, newBank);
+			return newBank;
 		}	
 	}
 }
