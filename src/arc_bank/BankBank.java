@@ -1,6 +1,7 @@
 package arc_bank;
 
-import genesis_event.Handled;
+import genesis_util.HandlingStateOperatorRelay;
+import genesis_util.Killable;
 import genesis_util.StateOperator;
 import genesis_util.StateOperatorListener;
 import arc_resource.ResourceType;
@@ -13,11 +14,12 @@ import arc_resource.ResourceType;
  * @param <T> The type of object held in the banks in this bank
  * @since 29.8.2013
  */
-public class BankBank<T extends Handled> extends Bank<Bank<T>> implements StateOperatorListener
+public class BankBank<T extends Killable> extends Bank<Bank<T>> implements StateOperatorListener
 {
 	// ATTRIBUTES	--------------------------
 	
 	private ResourceType resourceType;
+	private HandlingStateOperatorRelay operators;
 	
 	
 	// CONSTRUCTOR -----------------------------------------------------
@@ -32,6 +34,7 @@ public class BankBank<T extends Handled> extends Bank<Bank<T>> implements StateO
 		super(initializer);
 		
 		this.resourceType = resourceType;
+		this.operators = new HandlingStateOperatorRelay(new StateOperator(true, false));
 		
 		getIsDeadStateOperator().getListenerHandler().add(this);
 	}
@@ -71,5 +74,11 @@ public class BankBank<T extends Handled> extends Bank<Bank<T>> implements StateO
 		{
 			get(bankName).uninitialize();
 		}
+	}
+
+	@Override
+	public HandlingStateOperatorRelay getHandlingOperators()
+	{
+		return this.operators;
 	}
 }

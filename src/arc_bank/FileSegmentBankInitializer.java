@@ -4,7 +4,7 @@ import java.io.FileNotFoundException;
 import java.util.List;
 
 import flow_io.ModeUsingFileReader;
-import genesis_event.Handled;
+import genesis_util.Killable;
 
 /**
  * These initializers read object data from a file. The file may contain other kind of data 
@@ -14,7 +14,7 @@ import genesis_event.Handled;
  * @since 6.12.2014
  * @param <T> The type of content initialized by this initializer
  */
-public class FileSegmentBankInitializer<T extends Handled> implements BankInitializer<T>
+public class FileSegmentBankInitializer<T extends Killable> implements BankInitializer<T>
 {
 	// ATTRIBUTES	-------------------------------
 	
@@ -62,7 +62,7 @@ public class FileSegmentBankInitializer<T extends Handled> implements BankInitia
 	
 	// SUBCLASSES	--------------------------------
 	
-	private static class FileSegmentReader<T extends Handled> extends ModeUsingFileReader
+	private static class FileSegmentReader<T extends Killable> extends ModeUsingFileReader
 	{
 		// ATTRIBUTES	----------------------------
 		

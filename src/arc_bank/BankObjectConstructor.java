@@ -1,6 +1,6 @@
 package arc_bank;
 
-import genesis_event.Handled;
+import genesis_util.Killable;
 
 /**
  * ObjectConstructors are able to construct objects based on a command given on a single line
@@ -9,7 +9,7 @@ import genesis_event.Handled;
  * @since 27.11.2014
  * @param <T> The type of object constructed by this constructor
  */
-public abstract interface BankObjectConstructor<T extends Handled>
+public abstract interface BankObjectConstructor<T extends Killable>
 {
 	/**
 	 * Constructs an object from the information of the given line. The object should be 

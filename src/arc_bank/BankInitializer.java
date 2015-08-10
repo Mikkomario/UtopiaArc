@@ -1,6 +1,6 @@
 package arc_bank;
 
-import genesis_event.Handled;
+import genesis_util.Killable;
 
 /**
  * BankInitializers are able to provide initial content for a bank. Most preferably by 
@@ -10,7 +10,7 @@ import genesis_event.Handled;
  * @param <T> The type of resource created by this initializer
  * @since 27.11.2014
  */
-public interface BankInitializer<T extends Handled>
+public interface BankInitializer<T extends Killable>
 {
 	/**
 	 * Initializes the given bank

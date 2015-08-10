@@ -1,6 +1,6 @@
 package arc_resource;
 
-import genesis_event.Handled;
+import genesis_util.Killable;
 import genesis_util.StateOperator;
 
 import java.util.HashMap;
@@ -16,7 +16,7 @@ import arc_bank.MultiMediaHolder;
  * @author Mikko Hilpinen
  * @since 8.3.2014
  */
-public class GamePhase implements Handled
+public class GamePhase implements Killable
 {
 	// ATTRIBUTES	------------------------------------------------------
 	

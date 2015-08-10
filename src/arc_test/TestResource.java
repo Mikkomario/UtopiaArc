@@ -1,6 +1,6 @@
 package arc_test;
 
-import genesis_event.Handled;
+import genesis_util.Killable;
 import genesis_util.StateOperator;
 
 /**
@@ -9,7 +9,7 @@ import genesis_util.StateOperator;
  * @author Mikko Hilpinen
  * @since 30.11.2014
  */
-public class TestResource implements Handled
+public class TestResource implements Killable
 {
 	// ATTRIBUTES	--------------------------
 	

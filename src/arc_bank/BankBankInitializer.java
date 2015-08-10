@@ -4,7 +4,7 @@ import java.io.FileNotFoundException;
 import java.util.List;
 
 import flow_io.ModeUsingFileReader;
-import genesis_event.Handled;
+import genesis_util.Killable;
 
 /**
  * This initializer can be used in BankBanks since it can construct whole banks. 
@@ -14,7 +14,7 @@ import genesis_event.Handled;
  * @since 27.11.2014
  * @param <T> The type of handled held in the banks created by this initializer
  */
-public class BankBankInitializer<T extends Handled> implements BankInitializer<Bank<T>>
+public class BankBankInitializer<T extends Killable> implements BankInitializer<Bank<T>>
 {
 	// ATTRIBUTES	-------------------------------
 	
@@ -69,7 +69,7 @@ public class BankBankInitializer<T extends Handled> implements BankInitializer<B
 	
 	// SUBCLASSES	-------------------------
 	
-	private static class BankFileReader<T2 extends Handled> extends ModeUsingFileReader
+	private static class BankFileReader<T2 extends Killable> extends ModeUsingFileReader
 	{
 		// ATTRIBUTES	----------------------------------
 		

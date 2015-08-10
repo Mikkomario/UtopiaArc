@@ -1,6 +1,6 @@
 package arc_bank;
 
-import genesis_event.Handled;
+import genesis_util.Killable;
 import genesis_util.StateOperator;
 
 import java.util.HashMap;
@@ -17,7 +17,7 @@ import java.util.Set;
  * @param <T> The type of object held in this bank
  * @since 17.8.2013.
  */
-public class Bank<T extends Handled> implements Handled
+public class Bank<T extends Killable> implements Killable
 {
 	// ATTRIBUTES	-----------------------------------------------------
 	
@@ -58,7 +58,7 @@ public class Bank<T extends Handled> implements Handled
 	}
 	
 	
-	// IMPLEMENTED METHODS	-------------------------
+	// IMPLEMENTED METHODS	-----------------
 	
 	@Override
 	public StateOperator getIsDeadStateOperator()
