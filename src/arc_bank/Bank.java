@@ -2,6 +2,7 @@ package arc_bank;
 
 import genesis_util.Killable;
 import genesis_util.StateOperator;
+import jdk.nashorn.internal.ir.WithNode;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -16,6 +17,7 @@ import java.util.Set;
  * @author Mikko Hilpinen.
  * @param <T> The type of object held in this bank
  * @since 17.8.2013.
+ * @deprecated Replaced {@link WithNode} {@link utopia.arc.resource.Bank}
  */
 public class Bank<T extends Killable> implements Killable
 {
