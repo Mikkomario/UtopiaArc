@@ -5,6 +5,7 @@ import java.util.List;
 
 import flow_io.ModeUsingFileReader;
 import genesis_util.Killable;
+import utopia.arc.resource.BankRecorder;
 
 /**
  * This initializer can be used in BankBanks since it can construct whole banks. 
@@ -13,6 +14,7 @@ import genesis_util.Killable;
  * @author Mikko Hilpinen
  * @since 27.11.2014
  * @param <T> The type of handled held in the banks created by this initializer
+ * @deprecated Replaced with {@link BankRecorder}
  */
 public class BankBankInitializer<T extends Killable> implements BankInitializer<Bank<T>>
 {

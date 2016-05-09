@@ -2,6 +2,7 @@ package utopia.arc.resource;
 
 import java.util.Collection;
 
+import utopia.flow.generics.DataType;
 import utopia.flow.generics.Variable;
 
 /**
@@ -13,17 +14,22 @@ public interface BankRecorder
 {
 	/**
 	 * Writes bank contents somewhere
+	 * @param bankName The name of the written bank
+	 * @param bankType The type of the bank's contents
 	 * @param contents The contents that need to be written
 	 * @throws RecordingFailedException If the writing failed
 	 */
-	public void writeBank(Collection<? extends Variable> contents) throws RecordingFailedException;
+	public void writeBank(String bankName, DataType bankType, 
+			Collection<? extends Variable> contents) throws RecordingFailedException;
 	
 	/**
 	 * Reads the bank contents from somewhere
+	 * @param bankName The name of the read bank
+	 * @param bankType The type of the read content
 	 * @return The bank contents that were read
 	 * @throws RecordingFailedException If the read failed
 	 */
-	public Collection<Variable> readBank() throws RecordingFailedException;
+	public Collection<Variable> readBank(String bankName, DataType bankType) throws RecordingFailedException;
 	
 	
 	// NESTED CLASSES	-----------------

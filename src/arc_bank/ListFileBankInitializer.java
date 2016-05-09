@@ -4,6 +4,8 @@ import java.io.FileNotFoundException;
 
 import flow_io.ListFileReader;
 import genesis_event.Handled;
+import utopia.arc.resource.BankRecorder;
+import utopia.arc.resource.XmlFileBankRecorder;
 
 /**
  * This type of BankInitializer uses a file to read the necessary data from. The subclasses 
@@ -12,6 +14,7 @@ import genesis_event.Handled;
  * @author Mikko Hilpinen
  * @since 27.11.2014
  * @param <T> The type of resource this initializer is able to produce
+ * @deprecated Replaced with {@link BankRecorder} and {@link XmlFileBankRecorder}
  */
 public class ListFileBankInitializer<T extends Handled> implements BankInitializer<T>
 {

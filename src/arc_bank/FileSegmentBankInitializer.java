@@ -5,6 +5,8 @@ import java.util.List;
 
 import flow_io.ModeUsingFileReader;
 import genesis_util.Killable;
+import utopia.arc.resource.BankRecorder;
+import utopia.arc.resource.XmlFileBankRecorder;
 
 /**
  * These initializers read object data from a file. The file may contain other kind of data 
@@ -13,6 +15,7 @@ import genesis_util.Killable;
  * @author Mikko Hilpinen
  * @since 6.12.2014
  * @param <T> The type of content initialized by this initializer
+ * @deprecated Replaced with {@link BankRecorder} and {@link XmlFileBankRecorder}
  */
 public class FileSegmentBankInitializer<T extends Killable> implements BankInitializer<T>
 {

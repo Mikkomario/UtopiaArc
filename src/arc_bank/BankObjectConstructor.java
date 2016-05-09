@@ -1,6 +1,7 @@
 package arc_bank;
 
 import genesis_util.Killable;
+import utopia.flow.io.ElementValueParser;
 
 /**
  * ObjectConstructors are able to construct objects based on a command given on a single line
@@ -8,6 +9,7 @@ import genesis_util.Killable;
  * @author Mikko Hilpinen
  * @since 27.11.2014
  * @param <T> The type of object constructed by this constructor
+ * @deprecated Replaced with {@link ElementValueParser}
  */
 public abstract interface BankObjectConstructor<T extends Killable>
 {

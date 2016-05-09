@@ -1,5 +1,8 @@
 package utopia.arc.resource;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import utopia.arc.resource.BankRecorder.RecordingFailedException;
 import utopia.flow.generics.DataType;
 import utopia.flow.generics.Model;
@@ -18,6 +21,7 @@ public class Bank<ResourceType> extends Model<Variable>
 {
 	// ATTRIBUTES	----------------------
 	
+	private String name;
 	private DataType type;
 	private BankRecorder recorder;
 	private boolean initialised = false;
@@ -27,14 +31,16 @@ public class Bank<ResourceType> extends Model<Variable>
 	
 	/**
 	 * Creates a new bank
+	 * @param name The name of the bank
 	 * @param contentType The type of content held by this bank. Must match the object class 
 	 * associated with this bank.
 	 * @param recorder The object used for writing and reading the bank data
 	 */
-	public Bank(DataType contentType, BankRecorder recorder)
+	public Bank(String name, DataType contentType, BankRecorder recorder)
 	{
 		super(SingleTypeVariableParser.createBasicSingleTypeVariableParser(contentType));
 		
+		this.name = name;
 		this.type = contentType;
 		this.recorder = recorder;
 	}
@@ -54,6 +60,14 @@ public class Bank<ResourceType> extends Model<Variable>
 	// ACCESSORS	----------------------
 	
 	/**
+	 * @return The name of the bank
+	 */
+	public String getName()
+	{
+		return this.name;
+	}
+	
+	/**
 	 * @return The data type of the bank's contents
 	 */
 	public DataType getContentType()
@@ -69,11 +83,24 @@ public class Bank<ResourceType> extends Model<Variable>
 	 * @param resourceName The name of the requested resource
 	 * @return The resource with the provided name or null if there was no such resource.
 	 */
-	@SuppressWarnings("unchecked")
 	public ResourceType get(String resourceName)
 	{
 		// TODO: Throw an exception if there is no such resource
-		return (ResourceType) getAttribute(resourceName).getObjectValue(getContentType());
+		return attributeToResource(getAttribute(resourceName));
+	}
+	
+	/**
+	 * @return This bank's contents
+	 */
+	public List<ResourceType> listContents()
+	{
+		List<ResourceType> list = new ArrayList<>();
+		for (Variable var : getAttributes())
+		{
+			list.add(attributeToResource(var));
+		}
+		
+		return list;
 	}
 	
 	/**
@@ -92,7 +119,7 @@ public class Bank<ResourceType> extends Model<Variable>
 	 */
 	public void save() throws RecordingFailedException
 	{
-		this.recorder.writeBank(getAttributes());
+		this.recorder.writeBank(getName(), getContentType(), getAttributes());
 	}
 	
 	/**
@@ -104,7 +131,7 @@ public class Bank<ResourceType> extends Model<Variable>
 		if (!this.initialised)
 		{
 			this.initialised = true;
-			addAttributes(this.recorder.readBank(), true);
+			addAttributes(this.recorder.readBank(getName(), getContentType()), true);
 		}
 	}
 	
@@ -121,5 +148,11 @@ public class Bank<ResourceType> extends Model<Variable>
 				removeAttribute(attribute);
 			}
 		}
+	}
+	
+	@SuppressWarnings("unchecked")
+	private ResourceType attributeToResource(Variable attribute)
+	{
+		return (ResourceType) attribute.getObjectValue(getContentType());
 	}
 }

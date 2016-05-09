@@ -1,6 +1,7 @@
 package arc_bank;
 
 import genesis_util.Killable;
+import utopia.arc.resource.BankRecorder;
 
 /**
  * BankInitializers are able to provide initial content for a bank. Most preferably by 
@@ -9,6 +10,7 @@ import genesis_util.Killable;
  * @author Mikko Hilpinen
  * @param <T> The type of resource created by this initializer
  * @since 27.11.2014
+ * @deprecated Replaced with {@link BankRecorder}
  */
 public interface BankInitializer<T extends Killable>
 {

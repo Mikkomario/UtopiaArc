@@ -13,6 +13,7 @@ import arc_resource.ResourceType;
  * @author Unto Solala & Mikko Hilpinen
  * @param <T> The type of object held in the banks in this bank
  * @since 29.8.2013
+ * @deprecated Replaced with {@link utopia.arc.resource.BankBank}
  */
 public class BankBank<T extends Killable> extends Bank<Bank<T>> implements StateOperatorListener
 {

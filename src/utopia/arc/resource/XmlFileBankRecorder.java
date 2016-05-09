@@ -5,11 +5,14 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Collection;
 
 import javax.xml.stream.XMLStreamException;
 
+import utopia.flow.generics.DataType;
 import utopia.flow.generics.Variable;
 import utopia.flow.io.XmlElementReader;
 import utopia.flow.io.XmlElementReader.ElementParseException;
@@ -27,28 +30,37 @@ public class XmlFileBankRecorder implements BankRecorder
 {
 	// ATTRIBUTES	------------------
 	
-	private File targetFile;
+	private Path bankDirectory;
 	
 	
 	// CONSTRUCTOR	------------------
 	
 	/**
 	 * Creates a new bank recorder which uses the provided file to store bank data
-	 * @param targetFile The file the bank data is / will be stored to
+	 * @param bankDirectory The directory that contains all bank data (which then is stored 
+	 * in multiple separate directories and files)
 	 */
-	public XmlFileBankRecorder(File targetFile)
+	public XmlFileBankRecorder(Path bankDirectory)
 	{
-		this.targetFile = targetFile;
+		this.bankDirectory = bankDirectory;
 	}
 	
 	
 	// IMPLEMENTED METHODS	----------
 
 	@Override
-	public void writeBank(Collection<? extends Variable> contents) throws RecordingFailedException
+	public void writeBank(String bankName, DataType bankType, 
+			Collection<? extends Variable> contents) throws RecordingFailedException
 	{
+		// Determines the target file based on the bank content type and bank name
+		File targetFile = getTargetFile(bankName, bankType);
+		
+		// Tries to generate the directories for the target file
+		if (!targetFile.exists())
+			targetFile.mkdirs();
+		
 		// Parses the content into elements first
-		TreeNode<Element> root = new TreeNode<>(new Element("root"));
+		TreeNode<Element> root = new TreeNode<>(new Element(bankName));
 		for (Variable var : contents)
 		{
 			root.addChild(new TreeNode<>(new Element(var.getName(), var.getValue())));
@@ -57,7 +69,7 @@ public class XmlFileBankRecorder implements BankRecorder
 		// Writes the element data to the file
 		try
 		{
-			XmlElementWriter.writeElementIntoFile(root, this.targetFile, true);
+			XmlElementWriter.writeElementIntoFile(root, targetFile, true);
 		}
 		catch (IOException | XMLStreamException e)
 		{
@@ -66,10 +78,13 @@ public class XmlFileBankRecorder implements BankRecorder
 	}
 
 	@Override
-	public Collection<Variable> readBank() throws RecordingFailedException
+	public Collection<Variable> readBank(String bankName, DataType bankType) throws RecordingFailedException
 	{
+		// Parses the target file
+		File targetFile = getTargetFile(bankName, bankType);
+		
 		// If there is no file, there is no data
-		if (!this.targetFile.exists())
+		if (!targetFile.exists())
 			return new ArrayList<>();
 		
 		// Reads the bank data from the file
@@ -78,7 +93,7 @@ public class XmlFileBankRecorder implements BankRecorder
 		XmlElementReader reader = null;
 		try
 		{
-			stream = new FileInputStream(this.targetFile);
+			stream = new FileInputStream(targetFile);
 			reader = new XmlElementReader(stream, true);
 			
 			// Reads each element under the root element
@@ -115,5 +130,11 @@ public class XmlFileBankRecorder implements BankRecorder
 		}
 		
 		return data;
+	}
+	
+	private File getTargetFile(String bankName, DataType bankType)
+	{
+		return this.bankDirectory.resolve(Paths.get(bankType.toString(), 
+				bankName + ".xml")).toFile();
 	}
 }

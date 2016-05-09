@@ -3,6 +3,7 @@ package arc_bank;
 import java.util.List;
 
 import genesis_event.Handled;
+import utopia.arc.resource.BankRecorder;
 
 /**
  * This bankInitializer initializes bank content based on a special list of commands
@@ -10,6 +11,7 @@ import genesis_event.Handled;
  * @author Mikko Hilpinen
  * @since 27.11.2014
  * @param <T> The type of resource produced by this initializer
+ * @deprecated Replaced with {@link BankRecorder}
  */
 public class ListBankInitializer<T extends Handled> implements BankInitializer<T>
 {
