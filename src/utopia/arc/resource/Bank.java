@@ -85,6 +85,7 @@ public class Bank<ResourceType> extends Model<Variable>
 	 */
 	public ResourceType get(String resourceName)
 	{
+		// TODO: Initialise if not initialised?
 		// TODO: Throw an exception if there is no such resource
 		return attributeToResource(getAttribute(resourceName));
 	}

@@ -76,6 +76,7 @@ public class BankBank<ResourceType>
 	{
 		for (String bankName : bankNames)
 		{
+			// TODO: Only put if there is no bank already
 			put(bankName);
 		}
 	}
