@@ -11,6 +11,7 @@ import arc_bank.MultiMediaHolder;
  * 
  * @author Mikko Hilpinen
  * @since 30.11.2014
+ * @deprecated Replaced with {@link utopia.arc.resource.Bank}
  */
 public class TestResourceBank
 {

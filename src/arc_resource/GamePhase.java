@@ -2,6 +2,7 @@ package arc_resource;
 
 import genesis_util.Killable;
 import genesis_util.StateOperator;
+import utopia.arc.resource.Phase;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -15,6 +16,7 @@ import arc_bank.MultiMediaHolder;
  * 
  * @author Mikko Hilpinen
  * @since 8.3.2014
+ * @deprecated Replaced with {@link Phase}
  */
 public class GamePhase implements Killable
 {

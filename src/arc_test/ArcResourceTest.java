@@ -8,6 +8,7 @@ import arc_resource.ResourceActivator;
  * This class tests the resource initiation and request functions of Arc
  * @author Mikko Hilpinen
  * @since 30.11.2014
+ * @deprecated The tested resources are deprecated
  */
 public class ArcResourceTest
 {

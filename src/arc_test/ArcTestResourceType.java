@@ -7,6 +7,7 @@ import arc_resource.ResourceType;
  * 
  * @author Mikko Hilpinen
  * @since 30.11.2014
+ * @deprecated The tests have been deprecated
  */
 public enum ArcTestResourceType implements ResourceType
 {

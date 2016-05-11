@@ -8,6 +8,7 @@ import genesis_util.StateOperator;
  * 
  * @author Mikko Hilpinen
  * @since 30.11.2014
+ * @deprecated Genesis support will be removed and this class with it
  */
 public class TestResource implements Killable
 {
