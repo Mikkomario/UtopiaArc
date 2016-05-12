@@ -1,6 +1,8 @@
 package utopia.arc.resource;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import utopia.flow.generics.DataType;
@@ -48,6 +50,16 @@ public class BankBank<ResourceType>
 	// OTHER METHODS	-----------
 	
 	/**
+	 * Checks whether the bank bank contains a bank with the provided name (case-insensitive)
+	 * @param bankName The name of the bank
+	 * @return Does the bank bank contain a bank with the provided name
+	 */
+	public boolean containsBankWithName(String bankName)
+	{
+		return this.banks.containsKey(bankName.toLowerCase());
+	}
+	
+	/**
 	 * Adds a new bank to the bank bank
 	 * @param bank The bank that is added
 	 */
@@ -69,15 +81,15 @@ public class BankBank<ResourceType>
 	}
 	
 	/**
-	 * Adds multiple banks to the bank bank
+	 * Adds multiple banks to the bank bank (in case they don't exist there yet)
 	 * @param bankNames The names of the new banks
 	 */
 	public void generateBanks(String... bankNames)
 	{
 		for (String bankName : bankNames)
 		{
-			// TODO: Only put if there is no bank already
-			put(bankName);
+			if (!containsBankWithName(bankName))
+				put(bankName);
 		}
 	}
 	
@@ -122,6 +134,15 @@ public class BankBank<ResourceType>
 			return null;
 		else
 			return bank.get(resourceName);
+	}
+	
+	/**
+	 * @return The banks in this bank bank. The list is a copy and changes made to it 
+	 * won't affect the bank.
+	 */
+	public List<Bank<ResourceType>> getBanks()
+	{
+		return new ArrayList<>(this.banks.values());
 	}
 	
 	// TODO: Add methods for initialisation and uninitialisation if need be

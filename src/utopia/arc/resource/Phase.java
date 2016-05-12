@@ -99,4 +99,14 @@ public class Phase
 		
 		return Filter.findFirst(getActiveBankNames(resourceType), new StringFilter(bankName)) != null;
 	}
+	
+	/**
+	 * Checks whether a bank is active during this phase
+	 * @param bank The bank that may be active
+	 * @return Should the bank be available during this phase
+	 */
+	public boolean bankIsActive(Bank<?> bank)
+	{
+		return bankIsActive(bank.getContentType(), bank.getName());
+	}
 }
