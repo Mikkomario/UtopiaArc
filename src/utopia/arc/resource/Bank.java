@@ -6,6 +6,7 @@ import java.util.List;
 import utopia.arc.resource.BankRecorder.RecordingFailedException;
 import utopia.flow.generics.DataType;
 import utopia.flow.generics.Model;
+import utopia.flow.generics.SingleTypeVariableParser;
 import utopia.flow.generics.Value;
 import utopia.flow.generics.Variable;
 
@@ -82,11 +83,10 @@ public class Bank<ResourceType> extends Model<Variable>
 	 * Fetches a resource from the bank
 	 * @param resourceName The name of the requested resource
 	 * @return The resource with the provided name or null if there was no such resource.
+	 * @throws NoSuchAttributeException If the bank didn't contain a resource with the provided name
 	 */
-	public ResourceType get(String resourceName)
+	public ResourceType get(String resourceName) throws NoSuchAttributeException
 	{
-		// TODO: Initialise if not initialised?
-		// TODO: Throw an exception if there is no such resource
 		return attributeToResource(getAttribute(resourceName));
 	}
 	

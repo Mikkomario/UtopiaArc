@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import arc_bank.MultiMediaHolder;
+import utopia.arc.resource.ResourceManager;
 
 /**
  * ResourceActivator activates resources from certain gamePhases at a time. 
@@ -13,6 +14,7 @@ import arc_bank.MultiMediaHolder;
  * 
  * @author Mikko Hilpinen
  * @since 8.3.2014
+ * @deprecated Replaced with {@link ResourceManager}
  */
 public class ResourceActivator
 {

@@ -1,10 +1,13 @@
 package arc_bank;
 
+import utopia.arc.resource.BankRecorder.RecordingFailedException;
+
 /**
  * ResourceInitializationExceptions are thrown when resource initialization fails.
  * 
  * @author Mikko Hilpinen
  * @since 30.11.2014
+ * @deprecated Replaced with {@link RecordingFailedException}
  */
 public class ResourceInitializationException extends ResourceStateException
 {

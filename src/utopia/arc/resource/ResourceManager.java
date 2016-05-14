@@ -104,6 +104,12 @@ public class ResourceManager
 		return this.knownPhases.get(phaseName.toLowerCase());
 	}
 	
+	/**
+	 * Starts a certain phase, making sure the connected resources are available
+	 * @param phase The phase that is started
+	 * @param endOtherPhases Should the other, currently active, phases be ended (true) or kept active (false)
+	 * @throws RecordingFailedException If some of the banks couldn't be initialised
+	 */
 	public void startPhase(Phase phase, boolean endOtherPhases) throws RecordingFailedException
 	{
 		if (endOtherPhases)
@@ -112,12 +118,25 @@ public class ResourceManager
 		updateBanks();
 	}
 	
-	public void startPhase(String phaseName, boolean endOtherPhases)
+	/**
+	 * Starts a phase with the provided name, making the connected resources available
+	 * @param phaseName The name of the phase that is started
+	 * @param endOtherPhases Should the other, currently active, phases be ended (true) or kept active (false)
+	 * @throws PhaseNotIntroducedException If there was no phase with the provided name
+	 * @throws RecordingFailedException If some of the banks couldn't be initialised
+	 */
+	public void startPhase(String phaseName, boolean endOtherPhases) throws 
+			PhaseNotIntroducedException, RecordingFailedException
 	{
-		Phase newPhase = getPhase(phaseName);
-		
+		startPhase(getPhase(phaseName), endOtherPhases);
 	}
 	
+	/**
+	 * Switches a previous phase to a new phase
+	 * @param oldPhase The old phase that is ended
+	 * @param newPhase The new phase that is started
+	 * @throws RecordingFailedException If some of the banks couldn't be initialised
+	 */
 	public void switchPhase(Phase oldPhase, Phase newPhase) throws RecordingFailedException
 	{
 		this.currentPhases.remove(oldPhase);
@@ -126,6 +145,24 @@ public class ResourceManager
 		updateBanks();
 	}
 	
+	/**
+	 * Switches a previous phase to a new phase
+	 * @param oldPhaseName The name of the old phase that is ended
+	 * @param newPhaseName The name of the new phase that is started
+	 * @throws PhaseNotIntroducedException If there wasn't a phase with a provided name
+	 * @throws RecordingFailedException If some of the banks couldn't be initialised
+	 */
+	public void switchPhase(String oldPhaseName, String newPhaseName) throws 
+			PhaseNotIntroducedException, RecordingFailedException
+	{
+		switchPhase(getPhase(oldPhaseName), getPhase(newPhaseName));
+	}
+	
+	/**
+	 * Ends a phase, which may release some allocated resources
+	 * @param phase The phase that is ended
+	 * @throws RecordingFailedException If some of the banks couldn't be uninitialised
+	 */
 	public void endPhase(Phase phase) throws RecordingFailedException
 	{
 		if (this.currentPhases.contains(phase))
@@ -135,11 +172,15 @@ public class ResourceManager
 		}
 	}
 	
-	public void endPhase(String phaseName) throws RecordingFailedException
+	/**
+	 * Ends a phase, which may release some allocated resources
+	 * @param phaseName The name of the phase that is ended
+	 * @throws RecordingFailedException If some of the banks couldn't be uninitialised
+	 * @throws PhaseNotIntroducedException If there was not a phase with the provided name
+	 */
+	public void endPhase(String phaseName) throws RecordingFailedException, PhaseNotIntroducedException
 	{
-		Phase phase = getPhase(phaseName);
-		if (phase != null)
-			endPhase(phase);
+		endPhase(getPhase(phaseName));
 	}
 	
 	private void updateBanks() throws RecordingFailedException
