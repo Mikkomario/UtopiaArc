@@ -1,10 +1,10 @@
 package utopia.arc.resource;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.List;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 import utopia.flow.generics.DataType;
 import utopia.flow.util.Filter;
@@ -21,7 +21,7 @@ public class Phase
 	// ATTRIBUTES	-----------------
 	
 	private String name;
-	private Map<DataType, List<String>> activeBankNames = new HashMap<>();
+	private Map<DataType, Set<String>> activeBankNames = new HashMap<>();
 	
 	
 	// CONSTRUCTOR	-----------------
@@ -59,20 +59,27 @@ public class Phase
 	// OTHER METHODS	-------------
 	
 	/**
+	 * @return The resource types associated with this phase. Those resource types have 
+	 * active banks in this phase.
+	 */
+	public Set<DataType> getResourceTypes()
+	{
+		return new HashSet<>(this.activeBankNames.keySet());
+	}
+	
+	/**
 	 * Finds the names of the banks of a certain type, that are used during this phase
 	 * @param resourceType The type of resource in question
 	 * @return The banks of the provided resource type that should be kept available while 
 	 * the phase persists. The returned list is a copy and changes made to it won't affect 
 	 * this phase.
 	 */
-	public List<String> getActiveBankNames(DataType resourceType)
+	public Set<String> getActiveBankNames(DataType resourceType)
 	{
 		if (!this.activeBankNames.containsKey(resourceType))
-			this.activeBankNames.put(resourceType, new ArrayList<>());
+			this.activeBankNames.put(resourceType, new HashSet<>());
 			
-		List<String> copy = new ArrayList<>();
-		copy.addAll(this.activeBankNames.get(resourceType));
-		return copy;
+		return new HashSet<>(this.activeBankNames.get(resourceType));
 	}
 	
 	/**
@@ -83,7 +90,25 @@ public class Phase
 	 */
 	public void setActiveBankNames(DataType resourceType, Collection<String> activeBankNames)
 	{
-		this.activeBankNames.put(resourceType, new ArrayList<>(activeBankNames));
+		this.activeBankNames.put(resourceType, new HashSet<>(activeBankNames));
+	}
+	
+	/**
+	 * Adds a new bank to the set of active banks
+	 * @param resourceType The type of the bank
+	 * @param bankName The name of the bank
+	 */
+	public void addActiveBank(DataType resourceType, String bankName)
+	{
+		Set<String> bankNames = this.activeBankNames.get(resourceType);
+		
+		if (bankNames == null)
+		{
+			bankNames = new HashSet<>();
+			this.activeBankNames.put(resourceType, bankNames);
+		}
+		
+		bankNames.add(bankName);
 	}
 	
 	/**

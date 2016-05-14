@@ -5,8 +5,8 @@ import java.util.List;
 
 import flow_io.ModeUsingFileReader;
 import genesis_util.Killable;
+import utopia.arc.io.XmlFileBankRecorder;
 import utopia.arc.resource.BankRecorder;
-import utopia.arc.resource.XmlFileBankRecorder;
 
 /**
  * These initializers read object data from a file. The file may contain other kind of data 

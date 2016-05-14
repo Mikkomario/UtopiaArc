@@ -4,8 +4,8 @@ import java.io.FileNotFoundException;
 
 import flow_io.ListFileReader;
 import genesis_event.Handled;
+import utopia.arc.io.XmlFileBankRecorder;
 import utopia.arc.resource.BankRecorder;
-import utopia.arc.resource.XmlFileBankRecorder;
 
 /**
  * This type of BankInitializer uses a file to read the necessary data from. The subclasses 

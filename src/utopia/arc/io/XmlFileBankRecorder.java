@@ -1,4 +1,4 @@
-package utopia.arc.resource;
+package utopia.arc.io;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -12,6 +12,7 @@ import java.util.Collection;
 
 import javax.xml.stream.XMLStreamException;
 
+import utopia.arc.resource.BankRecorder;
 import utopia.flow.generics.DataType;
 import utopia.flow.generics.Variable;
 import utopia.flow.io.XmlElementReader;
