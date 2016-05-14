@@ -1,6 +1,7 @@
 package utopia.arc.resource;
 
 import java.util.Collection;
+import java.util.List;
 
 import utopia.flow.generics.DataType;
 import utopia.flow.generics.Variable;
@@ -30,6 +31,14 @@ public interface BankRecorder
 	 * @throws RecordingFailedException If the read failed
 	 */
 	public Collection<Variable> readBank(String bankName, DataType bankType) throws RecordingFailedException;
+	
+	/**
+	 * Reads the available bank names for a single resource type
+	 * @param resourceType The type of resource which's bank names are read
+	 * @return The available bank names, which may be used in the {@link #readBank(String, DataType)} method
+	 * @throws RecordingFailedException If the bank names couldn't be read
+	 */
+	public List<String> readBankNames(DataType resourceType) throws RecordingFailedException;
 	
 	
 	// NESTED CLASSES	-----------------

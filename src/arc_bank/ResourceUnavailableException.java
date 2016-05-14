@@ -1,10 +1,13 @@
 package arc_bank;
 
+import utopia.flow.generics.Model.NoSuchAttributeException;
+
 /**
  * ResourceUnavailableExceptions are thrown when resource retrieval fails.
  * 
  * @author Mikko Hilpinen
  * @since 30.11.2014
+ * @deprecated Replaced with {@link NoSuchAttributeException}
  */
 public class ResourceUnavailableException extends ResourceStateException
 {

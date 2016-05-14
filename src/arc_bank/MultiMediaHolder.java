@@ -18,6 +18,7 @@ import arc_resource.ResourceType;
  * @author Mikko Hilpinen. 
  * @since 14.2.2014
  * @see #initializeResourceDatabase(BankBank)
+ * @deprecated Replaced with {@link utopia.arc.resource.BankBank}
  */
 public class MultiMediaHolder
 {

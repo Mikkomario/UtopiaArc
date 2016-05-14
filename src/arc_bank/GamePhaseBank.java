@@ -6,12 +6,15 @@ import java.util.Map;
 import arc_resource.GamePhase;
 import arc_resource.MetaResourceType;
 import arc_resource.ResourceType;
+import utopia.arc.io.PhaseRecorder;
+import utopia.arc.resource.ResourceManager;
 
 /**
  * This is a static factor for banks that are contain GamePhases
  * 
  * @author Mikko Hilpinen
  * @since 27.11.2014
+ * @deprecated Replaced with {@link ResourceManager} and {@link PhaseRecorder}
  */
 public class GamePhaseBank
 {

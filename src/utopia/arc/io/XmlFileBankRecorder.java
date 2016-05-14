@@ -9,12 +9,14 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 import javax.xml.stream.XMLStreamException;
 
 import utopia.arc.resource.BankRecorder;
 import utopia.flow.generics.DataType;
 import utopia.flow.generics.Variable;
+import utopia.flow.io.FileUtils;
 import utopia.flow.io.XmlElementReader;
 import utopia.flow.io.XmlElementReader.ElementParseException;
 import utopia.flow.io.XmlElementReader.EndOfStreamReachedException;
@@ -133,9 +135,30 @@ public class XmlFileBankRecorder implements BankRecorder
 		return data;
 	}
 	
+	@Override
+	public List<String> readBankNames(DataType resourceType) throws RecordingFailedException
+	{
+		Path resourcePath = this.bankDirectory.resolve(resourceType.getName());
+		File resourceDirectory = resourcePath.toFile();
+		
+		List<String> bankNames = new ArrayList<>();
+		if (resourceDirectory.exists() && resourceDirectory.isDirectory())
+		{
+			String[] bankFileNames = FileUtils.findFileNamesIn(resourceDirectory, "xml");
+			if (bankFileNames == null)
+				throw new RecordingFailedException("Couldn't read file names under " + resourcePath);
+			for (String fileName : bankFileNames)
+			{
+				bankNames.add(fileName.substring(0, fileName.lastIndexOf('.')));
+			}
+		}
+		
+		return bankNames;
+	}
+	
 	private File getTargetFile(String bankName, DataType bankType)
 	{
-		return this.bankDirectory.resolve(Paths.get(bankType.toString(), 
+		return this.bankDirectory.resolve(Paths.get(bankType.getName(), 
 				bankName + ".xml")).toFile();
 	}
 }

@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import utopia.arc.resource.BankRecorder.RecordingFailedException;
 import utopia.flow.generics.DataType;
 
 /**
@@ -28,11 +29,24 @@ public class BankBank<ResourceType>
 	 * Creates a new bank bank
 	 * @param contentType The type of content in the banks. Must match the bank's class type
 	 * @param recorder The recorder used for reading and writing bank data
+	 * @param generateBanks Should the banks be generated as well by using the recorder to read 
+	 * the bank names
+	 * @throws RecordingFailedException If, when trying to generate the banks, the operation 
+	 * fails for some reason
 	 */
-	public BankBank(DataType contentType, BankRecorder recorder)
+	public BankBank(DataType contentType, BankRecorder recorder, boolean generateBanks) 
+			throws RecordingFailedException
 	{
 		this.type = contentType;
 		this.recorder = recorder;
+		
+		if (generateBanks)
+		{
+			for (String bankName : this.recorder.readBankNames(contentType))
+			{
+				put(bankName);
+			}
+		}
 	}
 	
 	

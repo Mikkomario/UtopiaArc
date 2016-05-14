@@ -6,6 +6,7 @@ package arc_bank;
  * 
  * @author Mikko Hilpinen
  * @since 30.11.2014
+ * @deprecated not used anymore. Will be removed in a future version
  */
 public class ResourceStateException extends RuntimeException
 {
