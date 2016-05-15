@@ -35,7 +35,7 @@ public class ArcDataTypeParser implements ValueParser
 		// Adds supported conversions
 		// Perfect cast from phase to model and nothing else
 		this.conversions.add(new Conversion(ArcDataType.PHASE, BasicDataType.MODEL, 
-				ConversionReliability.PERFECT));
+				ConversionReliability.DATA_LOSS));
 	}
 	
 	/**
