@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 
 import utopia.arc.resource.BankRecorder.RecordingFailedException;
+import utopia.flow.generics.DataType;
 
 /**
  * This class manages multiple resource types, activating and deactivating the banks when 
@@ -18,7 +19,7 @@ public class ResourceManager
 {
 	// ATTRIBUTES	-------------------
 	
-	private List<BankBank<?>> banks = new ArrayList<>();
+	private Map<DataType, BankBank<?>> banks = new HashMap<>();
 	private List<Phase> currentPhases = new ArrayList<>();
 	private Map<String, Phase> knownPhases = new HashMap<>();
 	
@@ -48,13 +49,13 @@ public class ResourceManager
 	// OTHER METHODS	---------------
 	
 	/**
-	 * Adds a new bank to be managed by this resource manager
+	 * Adds a new bank to be managed by this resource manager. If there was a bank with the 
+	 * same data type, it gets replaced with this one.
 	 * @param bank The bank that will be managed by the manager
 	 */
 	public void introduceBank(BankBank<?> bank)
 	{
-		if (!this.banks.contains(bank))
-			this.banks.add(bank);
+		this.banks.put(bank.getContentType(), bank);
 	}
 	
 	/**
@@ -92,6 +93,25 @@ public class ResourceManager
 	}
 	
 	/**
+	 * This method makes sure each bank introduced in the phases known by the manager exists 
+	 * in a bank bank known by the manager, where applicable. The banks and the phases need 
+	 * to be introduced at this point though.
+	 * @see #introduceBank(BankBank)
+	 * @see #introducePhase(Phase)
+	 */
+	public void generateBanksBasedOnPhases()
+	{
+		List<Phase> phases = getPhases();
+		for (BankBank<?> bank : getBanks())
+		{
+			for (Phase phase : phases)
+			{
+				bank.generateBanks(phase.getActiveBankNames(bank.getContentType()));
+			}
+		}
+	}
+	
+	/**
 	 * Finds a phase with the provided name. Only works with phases introduced to the manager
 	 * @param phaseName The name of the phase
 	 * @return The phase with the provided name (case-insensitive)
@@ -102,6 +122,33 @@ public class ResourceManager
 		if (!this.knownPhases.containsKey(phaseName.toLowerCase()))
 			throw new PhaseNotIntroducedException(phaseName);
 		return this.knownPhases.get(phaseName.toLowerCase());
+	}
+	
+	/**
+	 * @return All phases known by the manager. Altering this list won't affect the manager 
+	 * in any way.
+	 */
+	public List<Phase> getPhases()
+	{
+		return new ArrayList<>(this.knownPhases.values());
+	}
+	
+	/**
+	 * Finds an introduced bank of a certain resource type
+	 * @param resourceType The type of resource the bank holds
+	 * @return A bank for that resource type of null if one hasn't been introduced
+	 */
+	public BankBank<?> getBank(DataType resourceType)
+	{
+		return this.banks.get(resourceType);
+	}
+	
+	/**
+	 * @return The banks known by the manager. Changes made to the list won't affect the manager
+	 */
+	public List<BankBank<?>> getBanks()
+	{
+		return new ArrayList<>(this.banks.values());
 	}
 	
 	/**
@@ -183,10 +230,22 @@ public class ResourceManager
 		endPhase(getPhase(phaseName));
 	}
 	
+	/**
+	 * Saves all banks known by the manager
+	 * @throws RecordingFailedException If bank writing failed
+	 */
+	public void saveBanks() throws RecordingFailedException
+	{
+		for (BankBank<?> bank : getBanks())
+		{
+			bank.save();
+		}
+	}
+	
 	private void updateBanks() throws RecordingFailedException
 	{
 		// Goes through each bank and activates / deactivates it based on the current phases
-		for (BankBank<?> bankbank : this.banks)
+		for (BankBank<?> bankbank : getBanks())
 		{
 			for (Bank<?> bank : bankbank.getBanks())
 			{

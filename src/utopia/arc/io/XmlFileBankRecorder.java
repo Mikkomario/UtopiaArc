@@ -59,8 +59,9 @@ public class XmlFileBankRecorder implements BankRecorder
 		File targetFile = getTargetFile(bankName, bankType);
 		
 		// Tries to generate the directories for the target file
-		if (!targetFile.exists())
-			targetFile.mkdirs();
+		File targetDirectory = targetFile.getParentFile();
+		if (targetDirectory != null && !targetDirectory.exists())
+			targetDirectory.mkdirs();
 		
 		// Parses the content into elements first
 		TreeNode<Element> root = new TreeNode<>(new Element(bankName));

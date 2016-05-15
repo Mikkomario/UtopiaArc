@@ -1,6 +1,7 @@
 package utopia.arc.resource;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -108,6 +109,15 @@ public class BankBank<ResourceType>
 	}
 	
 	/**
+	 * Adds multiple banks to the bank bank (in case they don't exist there yet)
+	 * @param bankNames The names of the new banks
+	 */
+	public void generateBanks(Collection<String> bankNames)
+	{
+		generateBanks(bankNames.toArray(new String[0]));
+	}
+	
+	/**
 	 * Adds a new resource to one of the banks inside this bank bank
 	 * @param bankName The name of the target bank. If no bank exists with this name, one is 
 	 * created
@@ -159,5 +169,15 @@ public class BankBank<ResourceType>
 		return new ArrayList<>(this.banks.values());
 	}
 	
-	// TODO: Add methods for initialisation and uninitialisation if need be
+	/**
+	 * Saves the banks in this bank
+	 * @throws RecordingFailedException If the bank writing failed
+	 */
+	public void save() throws RecordingFailedException
+	{
+		for (Bank<?> bank : getBanks())
+		{
+			bank.save();
+		}
+	}
 }
