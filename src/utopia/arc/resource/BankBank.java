@@ -180,4 +180,27 @@ public class BankBank<ResourceType>
 			bank.save();
 		}
 	}
+	
+	/**
+	 * Initialises the contents of each bank in this collection
+	 * @throws RecordingFailedException If initialisation failed at some point
+	 */
+	public void initialiseAll() throws RecordingFailedException
+	{
+		for (Bank<?> bank : getBanks())
+		{
+			bank.initialise();
+		}
+	}
+	
+	/**
+	 * Uninitialises all banks in this collection
+	 */
+	public void unInitialiseAll()
+	{
+		for (Bank<?> bank : getBanks())
+		{
+			bank.uninitialise();
+		}
+	}
 }
