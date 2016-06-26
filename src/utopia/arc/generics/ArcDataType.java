@@ -6,7 +6,6 @@ import utopia.flow.generics.DataType;
 import utopia.flow.generics.DataTypeTreeNode;
 import utopia.flow.generics.DataTypes;
 import utopia.flow.generics.Value;
-import utopia.flow.io.XmlElementWriter;
 
 /**
  * These are the data type introduced in the Arc project
@@ -55,7 +54,7 @@ public enum ArcDataType implements DataType
 			// Adds parsing for the new type(s) as well
 			dataTypes.addParser(ArcDataTypeParser.getInstance());
 			// Plus element parsing
-			XmlElementWriter.introduceSpecialParser(new ArcElementValueParser());
+			dataTypes.introduceSpecialParser(new ArcElementValueParser());
 		}
 	}
 	
